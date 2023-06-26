@@ -7,7 +7,7 @@
 高清（宽512、高384）的风景图片imgs，和它们的语义分割图labels。其中 label 是值在 0~28 的灰度图。
 
 ## 网络架构
-<img src="mrd_archi.svg">
+<img src="Architecture-diagram.svg">
 
 ## 训练
 环境：分别在RTX4090 24G, Tesla V100 32G，Tesla A100 80G
