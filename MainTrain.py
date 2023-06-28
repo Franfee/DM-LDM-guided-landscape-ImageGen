@@ -258,9 +258,12 @@ def Stage3_Train_Com():
             # ------part of training vae-------
             img_rec = vae1.decoder(vae_out)
             recover_loss = criterion_l1(img_ref, img_rec)
-            recover_loss.backward(True)
+            recover_loss.backward()
             # ---------------------------------
 
+            # ---------detach for training unet-------------
+            vae_out = vae_out.detach().cpu().numpy()
+            vae_out = torch.from_numpy(vae_out).cuda()
             # 0.18215 = vae.config.scaling_factor
             vae_out = vae_out * 0.18215
 
