@@ -258,7 +258,7 @@ def Stage3_Train_Com():
             # ------part of training vae-------
             img_rec = vae1.decoder(vae_out)
             recover_loss = criterion_l1(img_ref, img_rec)
-            recover_loss.backward()
+            recover_loss.backward(True)
             # ---------------------------------
 
             # 0.18215 = vae.config.scaling_factor
