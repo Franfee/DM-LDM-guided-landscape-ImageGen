@@ -22,7 +22,7 @@ Environment: RTX4090 24G, Tesla V100 32G, Tesla A100 80G respectively
 
 训练时间:在RTX4090,V100,A100, 训练一轮vae约1.5-2h, 训练一轮unet约2-2.5h
 
-Training time:In RTX4090,V100,A100, training round vae about 1.5-2h, training round unet about 2-2.5h
+Training time:In RTX4090,V100,A100, training vae one epoch about 1.5-2h, training unet one epoch about 2-2.5h
 
 Training commands: <code>python3 MainTrain.py</code>
 
