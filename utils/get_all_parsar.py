@@ -17,7 +17,7 @@ def get_parser():
 
     parser.add_argument("--start_epoch", type=int, default=0, help="epoch to start training from")
     parser.add_argument("--n_epochs", type=int, default=100, help="number of epochs of training")
-    parser.add_argument("--data_root", type=str, default="../datasets/train_resized", help="datasets path")
+    parser.add_argument("--data_root", type=str, default="./datasets/train_resized", help="datasets path")
 
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     # parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
