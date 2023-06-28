@@ -15,8 +15,8 @@ from utils.DenoisingDiffusion import GaussianDiffusion
 
 DEVICE = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
 
-LOAD_CHECK_POINT_VAE = True
-LOAD_CHECK_POINT_UNET = True
+LOAD_CHECK_POINT_VAE = False
+LOAD_CHECK_POINT_UNET = False
 
 
 dataLoader = get_dataloader()
@@ -259,6 +259,14 @@ def Stage3_Train_Com():
             img_rec = vae1.decoder(vae_out)
             recover_loss = criterion_l1(img_ref, img_rec)
             recover_loss.backward()
+            # -----------debug---------------
+            if torch.any(torch.isnan(recover_loss)):
+                os.makedirs(os.path.join("result", "debug"), exist_ok=True)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                vae_sample_images(img_ref, img_rec, idx + 100000 * epoch, dir_output="debug")
+                torch.save(vae1.state_dict(), os.path.join("result", "debug", "vae-break-%d.ckpt" % (idx + 100000 * epoch)))
+                return
+            # ------------------------------
             # ---------------------------------
 
             # ---------detach for training unet-------------
