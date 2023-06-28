@@ -30,13 +30,13 @@ class GaussianDiffusion(nn.Module):
         super().__init__()
 
         if beta_scheduler == 'linear':
-            from utils.Beta_Scheduler import linear_beta_schedule
+            from utils.LR_Scheduler import linear_beta_schedule
             beta_schedule_fn = linear_beta_schedule
         elif beta_scheduler == 'cosine':
-            from utils.Beta_Scheduler import cosine_beta_schedule
+            from utils.LR_Scheduler import cosine_beta_schedule
             beta_schedule_fn = cosine_beta_schedule
         elif beta_scheduler == 'sigmoid':
-            from utils.Beta_Scheduler import sigmoid_beta_schedule
+            from utils.LR_Scheduler import sigmoid_beta_schedule
             beta_schedule_fn = sigmoid_beta_schedule
         else:
             raise ValueError(f'unknown beta schedule {beta_scheduler}')
