@@ -44,4 +44,4 @@ Adding modules for learning rate adjustment
 2. 将生成的Gen连续超分<br>
 Apply continuous super-resolution to the generated Gen
 3. 使用低阶矩阵秩分解，将Unet的attention层M\*N的矩阵分解为[M\*d] * [d\*N],使用语义分割信息再次训练加强分割控制性<br>
-Using LoRA
+Using ControlNet with LoRA
