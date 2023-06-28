@@ -18,7 +18,13 @@
 
 #TODO 测试命令: <code>python3 MainTest.py</code>
 ## 注意
-代码未完成,vae训练第二轮突然出现崩塌
+代码未完成
+
+stage1 vae训练第二轮突然出现崩塌
+
+stage3的vae训练正常,但是unet崩塌
+
+stage2的unet正常
 
 ## TODO
 1. 增加学习率调整
