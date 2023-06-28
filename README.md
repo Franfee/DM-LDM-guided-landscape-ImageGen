@@ -10,14 +10,17 @@
 <img src="Architecture-diagram.svg">
 
 ## 训练
-环境：分别在RTX4090 24G, Tesla V100 32G，Tesla A100 80G
+环境：分别(stage)在RTX4090 24G, Tesla V100 32G，Tesla A100 80G
 
 训练时间:在RTX4090,V100,A100, 训练一轮vae约1.5-2h, 训练一轮unet约2-2.5h
 
+训练命令: <code>python3 MainTrain.py</code>
+
+#TODO 测试命令: <code>python3 MainTest.py</code>
 ## 注意
 代码未完成,vae训练第二轮突然出现崩塌
 
 ## TODO
-1.将生成的Gen连续超分
-
-2.使用低阶矩阵秩分解，将Unet的attention层M*N的矩阵分解为[M*d] * [d*N],使用语义分割信息再次训练加强分割控制性
+1. 增加学习率调整
+2. 将生成的Gen连续超分
+3. 使用低阶矩阵秩分解，将Unet的attention层M\*N的矩阵分解为[M\*d] * [d\*N],使用语义分割信息再次训练加强分割控制性
