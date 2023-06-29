@@ -3,7 +3,7 @@
 # @Author  : FanAnfei
 # @Software: PyCharm
 # @python  : Python 3.9.12
-
+import json
 import os
 import glob
 
@@ -55,6 +55,64 @@ class MyImageDataset(Dataset):
 
     def __len__(self):
         return len(self.img_refs)
+
+
+class TestImageDataset(Dataset):
+    def __init__(self, root):
+        def get_json():
+            filePath = os.path.join("datasets", "label_to_img.json")
+            with open(filePath, 'r', encoding='utf8') as load_f:
+                loadDict = json.load(load_f)
+            return loadDict
+
+        self.transform = transforms.Compose(
+            [
+                transforms.Resize((opt.img_height, opt.img_width), f.InterpolationMode.BICUBIC),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.5], std=[0.5])
+            ]
+        )
+        self.jsonFile = get_json()
+        self.img_refs = []
+        self.img_msks = []
+        for msk, ref in self.jsonFile.items():
+            self.img_refs.append(os.path.join(root, "imgs", ref))
+            self.img_msks.append(os.path.join(root, "..", "val_A_labels_resized", msk))
+        pass
+
+    def __getitem__(self, index):
+        imgs_ref = Image.open(self.img_refs[index % len(self.img_refs)]).convert("RGB")
+        imgs_msk = Image.open(self.img_msks[index % len(self.img_msks)]).convert("L")
+
+        if np.random.random() < 0.5:
+            np_img_A = np.array(imgs_ref)[:, ::-1, :]
+            np_img_B = np.array(imgs_msk)[:, ::-1]
+
+            imgs_ref = Image.fromarray(np_img_A, "RGB")
+            imgs_msk = np_img_B
+            # imgs_msk = Image.fromarray(np_img_B, "L")
+
+        imgs_ref = self.transform(imgs_ref)
+        # imgs_msk = self.transform(imgs_msk)
+        imgs_msk = torch.unsqueeze(torch.from_numpy(np.array(imgs_msk).astype(np.float32) / 28.0), dim=0)
+
+        return {"img_ref": imgs_ref, "img_msk": imgs_msk}
+
+    def __len__(self):
+        return len(self.img_refs)
+
+
+def get_test_dataloader():
+    test_dataloader = DataLoader(
+        TestImageDataset(opt.data_root),
+        batch_size=opt.batch_size,
+        shuffle=True,
+        pin_memory=True,
+        num_workers=opt.n_cpu,
+        drop_last=False,
+    )
+
+    return test_dataloader
 
 
 def get_dataloader():
