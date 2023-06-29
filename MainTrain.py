@@ -58,8 +58,8 @@ def Stage1_Train_VAE():
         # init
         pass
 
-    train_lr = 1e-4
-    adam_betas = (0.9, 0.999)
+    train_lr = 1e-5
+    adam_betas = (0.5, 0.999)
     optimizer = torch.optim.AdamW(vae1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
     criterion_recover = torch.nn.L1Loss()
 
@@ -133,8 +133,8 @@ def Stage2_Train_UNet():
     else:
         pass
 
-    train_lr = 1e-4
-    adam_betas = (0.8, 0.999)
+    train_lr = 1e-5
+    adam_betas = (0.5, 0.9)
     optimizer = torch.optim.AdamW(unet1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
     criterion_l2 = torch.nn.MSELoss()
 
