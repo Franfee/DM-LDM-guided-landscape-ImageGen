@@ -75,14 +75,16 @@ class TestImageDataset(Dataset):
         self.jsonFile = get_json()
         self.img_refs = []
         self.img_msks = []
+        self.save_name = []
         for msk, ref in self.jsonFile.items():
             self.img_refs.append(os.path.join(root, "imgs", ref))
             self.img_msks.append(os.path.join(root, "..", "val_A_labels_resized", msk))
-        pass
+            self.save_name.append(str(msk).replace("png", "jpg"))
 
     def __getitem__(self, index):
         imgs_ref = Image.open(self.img_refs[index % len(self.img_refs)]).convert("RGB")
         imgs_msk = Image.open(self.img_msks[index % len(self.img_msks)]).convert("L")
+        save_name = self.save_name[index % len(self.save_name)]
 
         if np.random.random() < 0.5:
             np_img_A = np.array(imgs_ref)[:, ::-1, :]
@@ -96,7 +98,7 @@ class TestImageDataset(Dataset):
         # imgs_msk = self.transform(imgs_msk)
         imgs_msk = torch.unsqueeze(torch.from_numpy(np.array(imgs_msk).astype(np.float32) / 28.0), dim=0)
 
-        return {"img_ref": imgs_ref, "img_msk": imgs_msk}
+        return {"img_ref": imgs_ref, "img_msk": imgs_msk, "save_name": save_name}
 
     def __len__(self):
         return len(self.img_refs)
@@ -106,7 +108,7 @@ def get_test_dataloader():
     test_dataloader = DataLoader(
         TestImageDataset(opt.data_root),
         batch_size=opt.batch_size,
-        shuffle=True,
+        shuffle=False,
         pin_memory=True,
         num_workers=opt.n_cpu,
         drop_last=False,
