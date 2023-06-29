@@ -26,7 +26,7 @@ Training time:In RTX4090,V100,A100, training vae one epoch about 1.5-2h, trainin
 
 Training commands: <code>python3 MainTrain.py</code>
 
-Testing commands(#TODO): <code>python3 MainTest.py</code>
+Testing commands: <code>python3 MainTest.py</code>
 
 ## 注意 Note
 Code is not completed
