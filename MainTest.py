@@ -87,7 +87,8 @@ def Test():
                                               mask_condition=img_msk, img=ref_vae_out)
         img_gen = vae_clone.decoder(latent_gen)
         img_gen = make_grid(img_gen, nrow=1, normalize=True)
-        save_image(img_gen, os.path.join("result", "images", save_name), normalize=False)
+        save_name = os.path.join("result", "images", save_name[0])
+        save_image(img_gen, save_name, normalize=False)
 
 
 if __name__ == '__main__':
