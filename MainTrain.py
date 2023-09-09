@@ -96,6 +96,7 @@ def Stage1_Train_VAE():
                 scaler.step(optimizer)
                 # 查看是否要动态调整scaler的大小scaler
                 scaler.update()
+                optimizer.zero_grad()
 
             # --------Log Progress--------
             # Determine approximate time left
@@ -188,6 +189,7 @@ def Stage2_Train_UNet():
                 scaler.step(optimizer)
                 # 查看是否要动态调整scaler的大小scaler
                 scaler.update()
+                optimizer.zero_grad()
 
             # --------Log Progress--------
             # Determine approximate time left
