@@ -24,8 +24,7 @@
 ## 注意
 1. 代码未完成
 2. stage1的vae训练第二轮突然出现崩塌
-3. 在stage3, vae训练正常,但是unet模式崩塌
-4. 在stage2, unet正常训练,固定stage1所训练的vae
+3. 在stage2, unet正常训练,固定stage1所训练的vae
 
 ## TODO
 1. 增加学习率调整
