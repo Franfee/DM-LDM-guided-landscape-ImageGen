@@ -6,6 +6,9 @@
 import datetime
 import time
 
+# 自动混合精度
+from torch.cuda.amp import autocast as autocast
+from torch.cuda.amp import GradScaler
 from torchvision.utils import make_grid, save_image
 
 from nets.UNet import UNet
@@ -62,6 +65,8 @@ def Stage1_Train_VAE():
     adam_betas = (0.5, 0.999)
     optimizer = torch.optim.AdamW(vae1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
     criterion_recover = torch.nn.L1Loss()
+    # GradScaler对象用于自动混合精度
+    scaler = GradScaler()
 
     # --------GPU-----------
     vae1.cuda()
@@ -75,24 +80,22 @@ def Stage1_Train_VAE():
             img_ref = data['img_ref']
             img_ref = img_ref.cuda()
 
-            recover_img = vae1(img_ref)
+            # 前向过程(model + loss)开启 autocast
+            with autocast():
+                recover_img = vae1(img_ref)
+                recover_loss = criterion_recover(img_ref, recover_img) / 4
 
-            recover_loss = criterion_recover(img_ref, recover_img) / 4
-            # -----------debug---------------
-            if torch.any(torch.isnan(recover_loss)):
-                os.makedirs(os.path.join("result", "debug"), exist_ok=True)
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                vae_sample_images(img_ref, recover_img, idx + 100000 * epoch, dir_output="debug")
-                torch.save(vae1.state_dict(), os.path.join("result", "debug",
-                                                           "vae-break-%d.ckpt" % (idx + 100000 * epoch)))
-                return
-            # ---------------------------
-            recover_loss.backward()
+            # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
+            scaler.scale(recover_loss).backward()
+            # recover_loss.backward()
 
             if (idx + 1) % 4 == 0:
                 torch.nn.utils.clip_grad_norm_(vae1.parameters(), 1.0)
-                optimizer.step()
-                optimizer.zero_grad()
+                # optimizer.step()
+                # optimizer.zero_grad()
+                scaler.step(optimizer)
+                # 查看是否要动态调整scaler的大小scaler
+                scaler.update()
 
             # --------Log Progress--------
             # Determine approximate time left
