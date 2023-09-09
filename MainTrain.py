@@ -140,6 +140,8 @@ def Stage2_Train_UNet():
     adam_betas = (0.5, 0.9)
     optimizer = torch.optim.AdamW(unet1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
     criterion_l2 = torch.nn.MSELoss()
+    # GradScaler对象用于自动混合精度
+    scaler = GradScaler()
 
     # --------GPU-----------
     vae1.cuda()
@@ -167,17 +169,25 @@ def Stage2_Train_UNet():
             noise_step = noise_step.cuda()
             x_noised, noise = noise_helper(vae_out, noise_step)
 
-            # 根据mask语义信息,把特征图中的噪声计算出来
-            noise_pred = unet1(x_noised, img_msk, noise_step)
+            # 前向过程(model + loss)开启 autocast
+            with autocast():
+                # 根据mask语义信息,把特征图中的噪声计算出来
+                noise_pred = unet1(x_noised, img_msk, noise_step)
 
-            # 计算mse loss [1, 4, 64, 64],[1, 4, 64, 64]
-            pred_loss = criterion_l2(noise_pred, noise) / 4
-            pred_loss.backward()
+                # 计算mse loss [1, 4, 64, 64],[1, 4, 64, 64]
+                pred_loss = criterion_l2(noise_pred, noise) / 4
+
+            # pred_loss.backward()
+            # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
+            scaler.scale(pred_loss).backward()
 
             if (idx + 1) % 4 == 0:
                 torch.nn.utils.clip_grad_norm_(unet1.parameters(), 1.0)
-                optimizer.step()
-                optimizer.zero_grad()
+                # optimizer.step()
+                # optimizer.zero_grad()
+                scaler.step(optimizer)
+                # 查看是否要动态调整scaler的大小scaler
+                scaler.update()
 
             # --------Log Progress--------
             # Determine approximate time left
