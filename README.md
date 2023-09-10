@@ -10,7 +10,7 @@
 高清（宽512、高384）的风景图片imgs，和它们的语义分割图labels。其中 label 是值在 0~28 的灰度图。
 
 ## 网络架构
-<img src="Architecture-diagram.svg">
+<img src="AttMarkDown/Architecture-diagram.svg">
 
 ## 训练
 环境：分别(stage)在RTX4090 24G, Tesla V100 32G，Tesla A100 80G
@@ -25,6 +25,28 @@
 1. 代码未完成
 2. stage1的vae训练第二轮突然出现崩塌
 3. 在stage2, unet正常训练,固定stage1所训练的vae
+
+## Training procedure
+### VAE
+1. 0-2 epoch
+- batch size = 1 
+- optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.999), weight_decay=0.01, eps=1e-8)
+- step0:<img src="AttMarkDown/vae-step_0.png">
+- step100:<img src="AttMarkDown/vae-step_100.png">
+- step20000:<img src="AttMarkDown/vae-step_20000.png">
+2. 3-5 epoch
+- batch size = 2 
+- optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
+- step10000:<img src="AttMarkDown/vae-step_10000.png">
+- step30000:<img src="AttMarkDown/vae-step_30000.png">
+3. 6+  epoch
+- batch size = 2 
+- optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
+- Training...
+
+### Unet
+- TODO
+
 
 ## TODO
 1. 增加学习率调整
