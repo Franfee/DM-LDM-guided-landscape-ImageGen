@@ -50,7 +50,9 @@ Testing commands: <code>python3 MainTest.py</code>
 4. 9-11 epoch
 - batch size = 3 
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
-- training...
+- step28000:<img src="AttMarkDown/vae-step_28000.png">
+- step29900:<img src="AttMarkDown/vae-step_29900.png">
+5. TODO
 ### Unet
 - TODO
 
