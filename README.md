@@ -39,11 +39,15 @@
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
 - step10000:<img src="AttMarkDown/vae-step_10000.png">
 - step30000:<img src="AttMarkDown/vae-step_30000.png">
-3. 6+  epoch
+3. 6-8  epoch
 - batch size = 2 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
-- Training...
-
+- step35000:<img src="AttMarkDown/vae-step_10000.png">
+- step40000:<img src="AttMarkDown/vae-step_30000.png">
+4. 9-11 epoch
+- batch size = 3 
+- optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
+- training...
 ### Unet
 - TODO
 
