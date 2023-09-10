@@ -29,28 +29,29 @@ Testing commands: <code>python3 MainTest.py</code>
 
 ## Training procedure
 ### VAE
-1. 0-2 epoch
+#### 0-2 epoch
 - batch size = 1 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.999), weight_decay=0.01, eps=1e-8)
 - step0:<img src="AttMarkDown/vae-step_0.png">
 - step100:<img src="AttMarkDown/vae-step_100.png">
 - step20000:<img src="AttMarkDown/vae-step_20000.png">
-2. 3-5 epoch
+#### 3-5 epoch
 - batch size = 2 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
 - step10000:<img src="AttMarkDown/vae-step_10000.png">
 - step30000:<img src="AttMarkDown/vae-step_30000.png">
-3. 6-8  epoch
+#### 6-8  epoch
 - batch size = 2 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
 - step35000:<img src="AttMarkDown/vae-step_10000.png">
 - step40000:<img src="AttMarkDown/vae-step_30000.png">
-4. 9-11 epoch
+#### 9-11 epoch
 - batch size = 3 
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
 - step28000:<img src="AttMarkDown/vae-step_28000.png">
 - step29900:<img src="AttMarkDown/vae-step_29900.png">
-5. TODO
+#### TODO
+
 ### Unet
 - TODO
 
