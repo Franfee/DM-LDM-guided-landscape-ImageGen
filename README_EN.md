@@ -25,9 +25,7 @@ Testing commands: <code>python3 MainTest.py</code>
 
 ## Note
 1. Code is not completed
-2. In stage1, the second round of vae training suddenly emerged mode collapse
-3. In stage3, vae training was normal, but the unet mode collapsed
-4. In stage2, unet trained normally, fixed the vae trained in stage1
+2. In stage2, unet trained normally, fixed the vae trained in stage1
 
 ## Training procedure
 ### VAE

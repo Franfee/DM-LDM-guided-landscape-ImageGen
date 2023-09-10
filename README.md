@@ -23,8 +23,7 @@
 
 ## 注意
 1. 代码未完成
-2. stage1的vae训练第二轮突然出现崩塌
-3. 在stage2, unet正常训练,固定stage1所训练的vae
+2. 在stage2, unet正常训练,固定stage1所训练的vae
 
 ## Training procedure
 ### VAE
