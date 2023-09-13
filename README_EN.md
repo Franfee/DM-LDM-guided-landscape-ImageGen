@@ -11,7 +11,7 @@ Reference: https://www.educoder.net/competitions/Jittor-4
 HD (512 wide, 384 high) landscape images imgs, and their semantic segmentation maps labels. where label is a grayscale map with values from 0 to 28.
 
 ## Architecture
-<img src="AttMarkDown/Architecture-diagram.svg">
+<img src="Attachment/Architecture-diagram.svg">
 
 ## Training
 
@@ -32,25 +32,23 @@ Testing commands: <code>python3 MainTest.py</code>
 #### 0-2 epoch
 - batch size = 1 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.999), weight_decay=0.01, eps=1e-8)
-- step0:<img src="AttMarkDown/vae-step_0.png">
-- step100:<img src="AttMarkDown/vae-step_100.png">
-- step20000:<img src="AttMarkDown/vae-step_20000.png">
-#### 3-5 epoch
+- step0:<div align=center><img src="AttMarkDown/vae-step_0.png" width="50%"></div>
+- step100:<div align=center><img src="AttMarkDown/vae-step_100.png" width="50%"></div>
+- step20000:<div align=center><img src="AttMarkDown/vae-step_20000.png" width="50%"></div>
+#### 3-8 epoch
 - batch size = 2 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
 - step10000:<img src="AttMarkDown/vae-step_10000.png">
 - step30000:<img src="AttMarkDown/vae-step_30000.png">
-#### 6-8  epoch
-- batch size = 2 
-- optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
-- step35000:<img src="AttMarkDown/vae-step_10000.png">
-- step40000:<img src="AttMarkDown/vae-step_30000.png">
+- step35000:<img src="AttMarkDown/vae-step_35000.png">
+- step40000:<img src="AttMarkDown/vae-step_40000.png">
 #### 9-11 epoch
 - batch size = 3 
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
 - step28000:<img src="AttMarkDown/vae-step_28000.png">
 - step29900:<img src="AttMarkDown/vae-step_29900.png">
-#### TODO
+#### 100 epoch
+- TODO Finish 100 round
 
 ### Unet
 - TODO

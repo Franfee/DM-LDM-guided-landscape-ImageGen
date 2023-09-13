@@ -10,7 +10,7 @@
 高清（宽512、高384）的风景图片imgs，和它们的语义分割图labels。其中 label 是值在 0~28 的灰度图。
 
 ## 网络架构
-<img src="AttMarkDown/Architecture-diagram.svg">
+<img src="Attachment/Architecture-diagram.svg">
 
 ## 训练
 环境：分别(stage)在RTX4090 24G, Tesla V100 32G，Tesla A100 80G
@@ -30,25 +30,23 @@
 #### 0-2 epoch
 - batch size = 1 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.999), weight_decay=0.01, eps=1e-8)
-- step0:<img src="AttMarkDown/vae-step_0.png">
-- step100:<img src="AttMarkDown/vae-step_100.png">
-- step20000:<img src="AttMarkDown/vae-step_20000.png">
-#### 3-5 epoch
+- step0:<div align=center><img src="Attachment/vae-step_0.png" width="50%"></div>
+- step100:<div align=center><img src="Attachment/vae-step_100.png" width="50%"></div>
+- step20000:<div align=center><img src="Attachment/vae-step_20000.png" width="50%"></div>
+#### 3-8 epoch
 - batch size = 2 
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
-- step10000:<img src="AttMarkDown/vae-step_10000.png">
-- step30000:<img src="AttMarkDown/vae-step_30000.png">
-#### 6-8  epoch
-- batch size = 2 
-- optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
-- step35000:<img src="AttMarkDown/vae-step_10000.png">
-- step40000:<img src="AttMarkDown/vae-step_30000.png">
+- step10000:<img src="Attachment/vae-step_10000.png">
+- step30000:<img src="Attachment/vae-step_30000.png">
+- step35000:<img src="Attachment/vae-step_35000.png">
+- step40000:<img src="Attachment/vae-step_40000.png">
 #### 9-11 epoch
 - batch size = 3 
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
-- step28000:<img src="AttMarkDown/vae-step_28000.png">
-- step29900:<img src="AttMarkDown/vae-step_29900.png">
-#### TODO
+- step28000:<img src="Attachment/vae-step_28000.png">
+- step29900:<img src="Attachment/vae-step_29900.png">
+#### 100 epoch
+- TODO Finish 100 round
 
 ### Unet
 - TODO
