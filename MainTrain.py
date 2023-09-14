@@ -21,7 +21,6 @@ DEVICE = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('
 LOAD_CHECK_POINT_VAE = False
 LOAD_CHECK_POINT_UNET = False
 
-
 dataLoader = get_dataloader()
 
 
@@ -89,14 +88,14 @@ def Stage1_Train_VAE():
             scaler.scale(recover_loss).backward()
             # recover_loss.backward()
 
-            if (idx + 1) % 4 == 0:
-                torch.nn.utils.clip_grad_norm_(vae1.parameters(), 1.0)
-                # optimizer.step()
-                # optimizer.zero_grad()
-                scaler.step(optimizer)
-                # 查看是否要动态调整scaler的大小scaler
-                scaler.update()
-                optimizer.zero_grad()
+            # if (idx + 1) % 4 == 0:
+            torch.nn.utils.clip_grad_norm_(vae1.parameters(), 1.0)
+            # optimizer.step()
+            # optimizer.zero_grad()
+            scaler.step(optimizer)
+            # 查看是否要动态调整scaler的大小scaler
+            scaler.update()
+            optimizer.zero_grad()
 
             # --------Log Progress--------
             # Determine approximate time left
@@ -182,14 +181,14 @@ def Stage2_Train_UNet():
             # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
             scaler.scale(pred_loss).backward()
 
-            if (idx + 1) % 4 == 0:
-                torch.nn.utils.clip_grad_norm_(unet1.parameters(), 1.0)
-                # optimizer.step()
-                # optimizer.zero_grad()
-                scaler.step(optimizer)
-                # 查看是否要动态调整scaler的大小scaler
-                scaler.update()
-                optimizer.zero_grad()
+            # if (idx + 1) % 4 == 0:
+            torch.nn.utils.clip_grad_norm_(unet1.parameters(), 1.0)
+            # optimizer.step()
+            # optimizer.zero_grad()
+            scaler.step(optimizer)
+            # 查看是否要动态调整scaler的大小scaler
+            scaler.update()
+            optimizer.zero_grad()
 
             # --------Log Progress--------
             # Determine approximate time left
