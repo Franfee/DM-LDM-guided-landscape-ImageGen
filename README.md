@@ -40,11 +40,13 @@
 - step30000:<img src="Attachment/vae-step_30000.png">
 - step35000:<img src="Attachment/vae-step_35000.png">
 - step40000:<img src="Attachment/vae-step_40000.png">
-#### 9-11 epoch
+#### 9-20 epoch
 - batch size = 3 
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
 - step28000:<img src="Attachment/vae-step_28000.png">
 - step29900:<img src="Attachment/vae-step_29900.png">
+- step48000:<img src="Attachment/vae-step_48000.png">
+- step50000:<img src="Attachment/vae-step_50000.png">
 #### 100 epoch
 - TODO Finish 100 round
 
