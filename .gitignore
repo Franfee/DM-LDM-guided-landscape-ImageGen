@@ -1,0 +1,10 @@
+# Default ignored files
+*.py[co]
+.vscode/
+.idea/
+
+
+# 
+/result
+*.zip
+label_to_img.json
