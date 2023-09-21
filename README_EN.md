@@ -31,12 +31,16 @@ Testing commands: <code>python3 MainTest.py</code>
 ### VAE
 #### 0-2 epoch
 - batch size = 1 
+- loss fun: L1loss
+- gradient accumulation batch = 4
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.999), weight_decay=0.01, eps=1e-8)
 - step0:<div align=center><img src="Attachment/vae-step_0.png" width="50%"></div>
 - step100:<div align=center><img src="Attachment/vae-step_100.png" width="50%"></div>
 - step20000:<div align=center><img src="Attachment/vae-step_20000.png" width="50%"></div>
 #### 3-8 epoch
 - batch size = 2 
+- loss fun: L1loss
+- gradient accumulation batch = 4
 - optimizer = AdamW(train_lr = 1e-5, adam_betas = (0.5, 0.9), weight_decay=0.01, eps=1e-8)
 - step10000:<img src="Attachment/vae-step_10000.png">
 - step30000:<img src="Attachment/vae-step_30000.png">
@@ -44,6 +48,8 @@ Testing commands: <code>python3 MainTest.py</code>
 - step40000:<img src="Attachment/vae-step_40000.png">
 #### 9-20 epoch
 - batch size = 3 
+- loss fun: L1loss
+- gradient accumulation batch = 1
 - optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
 - step28000:<img src="Attachment/vae-step_28000.png">
 - step29900:<img src="Attachment/vae-step_29900.png">
