@@ -13,13 +13,14 @@ from torchvision.utils import make_grid, save_image
 
 from nets.UNet import UNet
 from nets.VAE import VAE
+
 from utils.MyDataLoader import *
 from utils.DenoisingDiffusion import GaussianDiffusion
+from utils.get_all_parsar import LOAD_CHECK_POINT_VAE, LOAD_CHECK_POINT_UNET, LOAD_VAE_IDX, LOAD_UNET_IDX
+
 
 DEVICE = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
 
-LOAD_CHECK_POINT_VAE = False
-LOAD_CHECK_POINT_UNET = False
 
 dataLoader = get_dataloader()
 
@@ -55,14 +56,12 @@ def Stage1_Train_VAE():
     vae1 = VAE()
 
     if LOAD_CHECK_POINT_VAE:
-        vae1.load_state_dict(torch.load(os.path.join("result", "models", "vae.ckpt"), map_location=DEVICE))
+        vae1.load_state_dict(torch.load(os.path.join("result", "models", f"vae-{LOAD_VAE_IDX}.ckpt"), map_location=DEVICE))
     else:
         # init
         pass
 
-    train_lr = 1e-5
-    adam_betas = (0.5, 0.999)
-    optimizer = torch.optim.AdamW(vae1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
+    optimizer = torch.optim.AdamW(vae1.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=0.01, eps=1e-8)
     criterion_recover = torch.nn.L1Loss()
     # GradScaler对象用于自动混合精度
     scaler = GradScaler()
@@ -73,7 +72,7 @@ def Stage1_Train_VAE():
 
     # --------train---------
     prev_time = time.time()
-    for epoch in range(opt.start_epoch, opt.n_epochs):
+    for epoch in range(opt.s1start_epoch, opt.s1_epochs):
         vae1.train()
         for idx, data in enumerate(dataLoader):
             img_ref = data['img_ref']
@@ -126,19 +125,14 @@ def Stage2_Train_UNet():
 
     unet1 = UNet()
 
-    if LOAD_CHECK_POINT_VAE:
-        vae1.load_state_dict(torch.load(os.path.join("result", "models", "vae.ckpt"), map_location=DEVICE))
-    else:
-        pass
-
+    vae1.load_state_dict(torch.load(os.path.join("result", "models", "vae.ckpt"), map_location=DEVICE))
+    
     if LOAD_CHECK_POINT_UNET:
-        unet1.load_state_dict(torch.load(os.path.join("result", "models", "unet.ckpt"), map_location=DEVICE))
+        unet1.load_state_dict(torch.load(os.path.join("result", "models", f"unet-{LOAD_UNET_IDX}.ckpt"), map_location=DEVICE))
     else:
         pass
 
-    train_lr = 1e-5
-    adam_betas = (0.5, 0.9)
-    optimizer = torch.optim.AdamW(unet1.parameters(), lr=train_lr, betas=adam_betas, weight_decay=0.01, eps=1e-8)
+    optimizer = torch.optim.AdamW(unet1.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=0.01, eps=1e-8)
     criterion_l2 = torch.nn.MSELoss()
     # GradScaler对象用于自动混合精度
     scaler = GradScaler()
@@ -151,7 +145,7 @@ def Stage2_Train_UNet():
 
     # --------train---------
     prev_time = time.time()
-    for epoch in range(opt.start_epoch, opt.n_epochs):
+    for epoch in range(opt.s2start_epoch, opt.s2_epochs):
         unet1.train()
         for idx, data in enumerate(dataLoader):
             img_ref, img_msk = data['img_ref'], data['img_msk']
