@@ -14,6 +14,7 @@ from torchvision.utils import make_grid, save_image
 from nets.UNet import UNet
 from nets.VAE import VAE
 
+from utils.lr_scheduler import exp_lr_scheduler
 from utils.MyDataLoader import *
 from utils.DenoisingDiffusion import GaussianDiffusion
 from utils.get_all_parsar import LOAD_CHECK_POINT_VAE, LOAD_CHECK_POINT_UNET, LOAD_VAE_IDX, LOAD_UNET_IDX
@@ -74,6 +75,8 @@ def Stage1_Train_VAE():
     prev_time = time.time()
     for epoch in range(opt.s1start_epoch, opt.s1_epochs):
         vae1.train()
+        # adjust learning rate
+        optimizer = exp_lr_scheduler(optimizer, epoch, opt.lr, opt.lrd)
         for idx, data in enumerate(dataLoader):
             img_ref = data['img_ref']
             img_ref = img_ref.cuda()
@@ -147,6 +150,8 @@ def Stage2_Train_UNet():
     prev_time = time.time()
     for epoch in range(opt.s2start_epoch, opt.s2_epochs):
         unet1.train()
+        # adjust learning rate
+        optimizer = exp_lr_scheduler(optimizer, epoch, opt.lr, opt.lrd)
         for idx, data in enumerate(dataLoader):
             img_ref, img_msk = data['img_ref'], data['img_msk']
             img_ref = img_ref.cuda()
