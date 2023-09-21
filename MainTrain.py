@@ -99,10 +99,10 @@ def Stage1_Train_VAE():
             # --------Log Progress--------
             # Determine approximate time left
             batches_done = epoch * len(dataLoader) + idx
-            batches_left = opt.n_epochs * len(dataLoader) - batches_done
+            batches_left = opt.s1_epochs * len(dataLoader) - batches_done
             time_left = datetime.timedelta(seconds=batches_left * (time.time() - prev_time))
             print("[Epoch %d/%d] [Batch %d/%d] [recover_loss: %f] ETA: %s" %
-                  (epoch + 1, opt.n_epochs, idx + 1, len(dataLoader), recover_loss.item(), time_left))
+                  (epoch + 1, opt.s1_epochs, idx + 1, len(dataLoader), recover_loss.item(), time_left))
 
             # If at sample interval save image
             if batches_done % opt.sample_interval == 0:
@@ -187,10 +187,10 @@ def Stage2_Train_UNet():
             # --------Log Progress--------
             # Determine approximate time left
             batches_done = epoch * len(dataLoader) + idx
-            batches_left = opt.n_epochs * len(dataLoader) - batches_done
+            batches_left = opt.s2_epochs * len(dataLoader) - batches_done
             time_left = datetime.timedelta(seconds=batches_left * (time.time() - prev_time))
             print("[Epoch %d/%d] [Batch %d/%d] [pred_loss: %f] ETA: %s" %
-                  (epoch + 1, opt.n_epochs, idx + 1, len(dataLoader), pred_loss.item(), time_left))
+                  (epoch + 1, opt.s2_epochs, idx + 1, len(dataLoader), pred_loss.item(), time_left))
 
             # If at sample interval save image
             if batches_done % opt.sample_interval == 0:
@@ -223,5 +223,5 @@ if __name__ == '__main__':
     os.makedirs(os.path.join("result", "images"), exist_ok=True)
     os.makedirs(os.path.join("result", "models"), exist_ok=True)
 
-    # Stage1_Train_VAE()
-    # Stage2_Train_UNet()
+    Stage1_Train_VAE()
+    Stage2_Train_UNet()
