@@ -84,20 +84,20 @@ def Stage1_Train_VAE():
             # 前向过程(model + loss)开启 autocast
             with autocast():
                 recover_img = vae1(img_ref)
-                recover_loss = criterion_recover(img_ref, recover_img) / 4
+                recover_loss = criterion_recover(img_ref, recover_img) / opt.graccbatch_size
 
             # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
             scaler.scale(recover_loss).backward()
             # recover_loss.backward()
 
-            # if (idx + 1) % 4 == 0:
-            torch.nn.utils.clip_grad_norm_(vae1.parameters(), 1.0)
-            # optimizer.step()
-            # optimizer.zero_grad()
-            scaler.step(optimizer)
-            # 查看是否要动态调整scaler的大小scaler
-            scaler.update()
-            optimizer.zero_grad()
+            if (idx + 1) % opt.graccbatch_size == 0:
+                torch.nn.utils.clip_grad_norm_(vae1.parameters(), 1.0)
+                # optimizer.step()
+                # optimizer.zero_grad()
+                scaler.step(optimizer)
+                # 查看是否要动态调整scaler的大小scaler
+                scaler.update()
+                optimizer.zero_grad()
 
             # --------Log Progress--------
             # Determine approximate time left
