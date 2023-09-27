@@ -58,8 +58,13 @@ Testing commands: <code>python3 MainTest.py</code>
 - step55000:<img src="Attachment/vae-step_55000.png">
 - step63000:<img src="Attachment/vae-step_63000.png">
 - step68000:<img src="Attachment/vae-step_68000.png">
-#### 100 epoch
+#### 21-100 epoch
 - TODO Finish 100 round
+- batch size = 4
+- loss fun: L1loss
+- gradient accumulation batch = 1
+- optimizer = AdamW(train_lr = 5e-5, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
+- lr_scheduler = exp
 
 ### Unet
 - TODO
