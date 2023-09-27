@@ -53,6 +53,9 @@
 - step29900:<img src="Attachment/vae-step_29900.png">
 - step48000:<img src="Attachment/vae-step_48000.png">
 - step50000:<img src="Attachment/vae-step_50000.png">
+- step55000:<img src="Attachment/vae-step_55000.png">
+- step63000:<img src="Attachment/vae-step_63000.png">
+- step68000:<img src="Attachment/vae-step_68000.png">
 #### 100 epoch
 - TODO Finish 100 round
 
