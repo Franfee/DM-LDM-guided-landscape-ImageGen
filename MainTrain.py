@@ -136,7 +136,7 @@ def Stage2_Train_UNet():
         pass
 
     optimizer = torch.optim.AdamW(unet1.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=0.01, eps=1e-8)
-    criterion_l2 = torch.nn.MSELoss()
+    criterion_l1 = torch.nn.L1Loss()
     # GradScaler对象用于自动混合精度
     scaler = GradScaler()
 
@@ -144,7 +144,7 @@ def Stage2_Train_UNet():
     vae1.cuda()
     noise_helper.cuda()
     unet1.cuda()
-    criterion_l2.cuda()
+    criterion_l1.cuda()
 
     # --------train---------
     prev_time = time.time()
@@ -174,7 +174,7 @@ def Stage2_Train_UNet():
                 noise_pred = unet1(x_noised, img_msk, noise_step)
 
                 # 计算mse loss [1, 4, 64, 64],[1, 4, 64, 64]
-                pred_loss = criterion_l2(noise_pred, noise) / 4
+                pred_loss = criterion_l1(noise_pred, noise) / 4
 
             # pred_loss.backward()
             # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
