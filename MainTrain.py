@@ -199,14 +199,8 @@ def Stage2_Train_UNet():
 
             # If at sample interval save image
             if batches_done % opt.sample_interval == 0:
-                # unet不从完全的噪声中预测,从混合大量噪声的参考图中采样
-                low_steps, high_steps = 750, 850
-                noise_step = torch.randint(low_steps, high_steps, (opt.batch_size,)).long()
-                noise_step = noise_step.cuda()
-
-                ref_vae_out, _noise = noise_helper(vae_out, noise_step)
-                latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size(),
-                                                      mask_condition=img_msk, img=ref_vae_out)
+                # ddim阶段 unet从完全的噪声中预测
+                latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size(), mask_condition=img_msk)
                 # 从压缩图恢复成图片
                 vae_seed = 1 / 0.18215 * latent_gen
                 # [1, 4, 64, 64] -> [1, 3, 512, 512]
