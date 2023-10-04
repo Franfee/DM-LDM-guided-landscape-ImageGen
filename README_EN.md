@@ -55,9 +55,7 @@ Testing commands: <code>python3 MainTest.py</code>
 - step29900:<img src="Attachment/vae-step_29900.png">
 - step48000:<img src="Attachment/vae-step_48000.png">
 - step50000:<img src="Attachment/vae-step_50000.png">
-- step55000:<img src="Attachment/vae-step_55000.png">
-- step63000:<img src="Attachment/vae-step_63000.png">
-- step68000:<img src="Attachment/vae-step_68000.png">
+
 #### 21-100 epoch
 - TODO Finish 100 round
 - batch size = 4
@@ -65,6 +63,10 @@ Testing commands: <code>python3 MainTest.py</code>
 - gradient accumulation batch = 1
 - optimizer = AdamW(train_lr = 5e-5, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
 - lr_scheduler = exp
+
+- step55000:<img src="Attachment/vae-step_55000.png">
+- step63000:<img src="Attachment/vae-step_63000.png">
+- step68000:<img src="Attachment/vae-step_68000.png">
 
 ### Unet
 - TODO
