@@ -8,7 +8,12 @@ Reference: https://www.educoder.net/competitions/Jittor-4
 
 ## Training data
 
-HD (512 wide, 384 high) landscape images imgs, and their semantic segmentation maps labels. where label is a grayscale map with values from 0 to 28.
+The Graphics Laboratory of the Computer Science and Technology Department at Tsinghua University collected 12,000 high-definition (width: 512, height: 384) landscape images from the Flickr official website and created semantic segmentation maps for them. Among them, 10,000 pairs of images were used for training.**In these images, the label is a grayscale image with values ranging from 0 to 28.**
+
+The signs include 29 categories of objects, respectively:
+```
+"mountain", "sky", "water", "sea", "rock", "tree", "earth", "hill", "river", "sand", "land", "building", "grass", "plant", "person", "boat", "waterfall", "wall", "pier", "path", "lake", "bridge", "field", "road", "railing", "fence", "ship", "house", "other" 
+```
 
 ## Architecture
 <img src="Attachment/Architecture-diagram.svg">

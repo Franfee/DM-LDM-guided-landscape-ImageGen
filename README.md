@@ -7,7 +7,13 @@
 参考: https://www.educoder.net/competitions/Jittor-4
 
 ## 训练数据
-高清（宽512、高384）的风景图片imgs，和它们的语义分割图labels。其中 label 是值在 0~28 的灰度图。
+清华大学计算机系图形学实验室从Flickr官网收集了12000张高清（宽512、高384）的风景图片，并制作了它们的语义分割图。其中，10000对图片被用来训练。**其中 label 是值在 0~28 的灰度图**
+
+签包括29类物体，分别是
+
+```
+"mountain", "sky", "water", "sea", "rock", "tree", "earth", "hill", "river", "sand", "land", "building", "grass", "plant", "person", "boat", "waterfall", "wall", "pier", "path", "lake", "bridge", "field", "road", "railing", "fence", "ship", "house", "other" 
+```
 
 ## 网络架构
 <img src="Attachment/Architecture-diagram.svg">
