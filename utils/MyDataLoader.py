@@ -7,18 +7,17 @@ import json
 import os
 import glob
 
-import matplotlib.pyplot as plt
+
 import numpy as np
 import torch
 from PIL import Image
 
+from torch.utils.data.distributed import DistributedSampler     # 多卡数据采样
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import torchvision.transforms.functional as f
 
-from utils.get_all_parsar import get_parser
-
-opt = get_parser()
+from utils.get_all_parsar import opt
 
 
 class MyImageDataset(Dataset):
@@ -117,20 +116,36 @@ def get_test_dataloader():
     return test_dataloader
 
 
-def get_dataloader():
-    train_dataloader = DataLoader(
-        MyImageDataset(opt.data_root),
-        batch_size=opt.batch_size,
-        shuffle=True,
-        pin_memory=True,
-        num_workers=opt.n_cpu,
-        drop_last=False,
-    )
+def get_dataloader(g=None, muti=True):
+    if muti:
+        data = MyImageDataset(opt.data_root)
+        train_ddp_sampler = DistributedSampler(data, shuffle=True)
+        train_dataloader = DataLoader(
+            data,
+            batch_size=opt.batch_size,
+            shuffle=False,
+            pin_memory=True,
+            num_workers=opt.n_cpu,
+            drop_last=False,
+            sampler=train_ddp_sampler,
+            generator=g
+        )
+    else:
+        train_dataloader = DataLoader(
+            MyImageDataset(opt.data_root),
+            data,
+            batch_size=opt.batch_size,
+            shuffle=False,
+            pin_memory=True,
+            num_workers=opt.n_cpu,
+            drop_last=False
+        )
 
     return train_dataloader
 
 
 # if __name__ == '__main__':
+#     import matplotlib.pyplot as plt
 #     loader = get_dataloader()
 #     from torchvision.utils import make_grid, save_image
 #
