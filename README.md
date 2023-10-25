@@ -65,7 +65,6 @@
 - step50000:<img src="Attachment/vae-step_50000.png">
 
 #### 21-50 epoch
-- TODO Finish 100 round
 - batch size = 3
 - loss fun: L1loss
 - gradient accumulation batch = 1
