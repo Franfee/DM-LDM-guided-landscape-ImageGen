@@ -15,8 +15,12 @@
 "mountain", "sky", "water", "sea", "rock", "tree", "earth", "hill", "river", "sand", "land", "building", "grass", "plant", "person", "boat", "waterfall", "wall", "pier", "path", "lake", "bridge", "field", "road", "railing", "fence", "ship", "house", "other" 
 ```
 
-## 网络架构
+## 网络架构(旧)
 <img src="Attachment/Architecture-diagram.svg">
+
+## 网络架构(新)
+<img src="Attachment/ArchitectureOverview.svg">
+
 
 ## 训练
 环境：分别(stage)在RTX4090 24G, Tesla V100 32G，Tesla A100 80G

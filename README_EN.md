@@ -15,8 +15,11 @@ The signs include 29 categories of objects, respectively:
 "mountain", "sky", "water", "sea", "rock", "tree", "earth", "hill", "river", "sand", "land", "building", "grass", "plant", "person", "boat", "waterfall", "wall", "pier", "path", "lake", "bridge", "field", "road", "railing", "fence", "ship", "house", "other" 
 ```
 
-## Architecture
+## Architecture(Old)
 <img src="Attachment/Architecture-diagram.svg">
+
+## Architecture(New)
+<img src="Attachment/ArchitectureOverview.svg">
 
 ## Training
 
