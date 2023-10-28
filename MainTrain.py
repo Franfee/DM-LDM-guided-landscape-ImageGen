@@ -6,15 +6,14 @@
 import datetime
 import time
 import os
-
-
 # 指定显卡可见性
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '1,2,3'
+
 
 import torch
 # 多卡
 import torch.distributed as dist    # 多卡通讯
-import torch.multiprocessing as mp  # 多进程
+import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP    # 模型传递
 from torch.nn import SyncBatchNorm  # BN层同步
 
@@ -31,7 +30,7 @@ from nets.VAE import VAE
 from utils.lr_scheduler import exp_lr_scheduler
 from utils.get_all_parsar import *
 from utils.DenoisingDiffusion import GaussianDiffusion
-
+from utils.my_gc import torch_gc
 print(opt)
 
 def init_ddp(local_rank):
@@ -161,7 +160,6 @@ def Stage1_Train_VAE():
 
 
 def Stage2_Train_UNet(local_rank, args):
-    print("In Stage2_Train_UNet...")
     # 多卡部分设置
     init_ddp(local_rank)
 
@@ -270,7 +268,7 @@ def Stage2_Train_UNet(local_rank, args):
                     img_gen = vae1.module.decoder(vae_seed)
                     # 保存照片
                     unet_sample_images(img_ref=img_ref, img_msk=img_msk, img_gen=img_gen, batches_done=batches_done)
-
+                torch_gc()
                 prev_time = time.time()
                 # end one batch
         # end one epoch checkpoint
@@ -292,6 +290,8 @@ if __name__ == '__main__':
 
     # Stage1_Train_VAE()
 
+    # 
+    # Stage2_Train_UNet()
     # 多卡部分
     os.environ['MASTER_ADDR'] = 'localhost'
     os.environ['MASTER_PORT'] = '12289'
@@ -301,4 +301,4 @@ if __name__ == '__main__':
     os.environ['WORLD_SIZE'] = str(world_size)
 
     mp.spawn(fn=Stage2_Train_UNet, args=(None,), nprocs=world_size)
-    # Stage2_Train_UNet()
+    
