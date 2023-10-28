@@ -87,7 +87,7 @@ class GaussianDiffusion(nn.Module):
         )
 
     @torch.no_grad()
-    def ddim_sample(self, model, shape, mask_condition, img=None, return_all_timesteps=False):
+    def ddim_sample(self, model, shape, mask_condition=None, img=None, return_all_timesteps=False):
         # shape = (batch_size, channels, image_size, image_size)
         batch, device = shape[0], self.betas.device
         total_timesteps, sampling_timesteps, eta = self.num_timesteps, self.sampling_timesteps, self.ddim_sampling_eta
@@ -106,7 +106,10 @@ class GaussianDiffusion(nn.Module):
             time_cond = torch.full((batch,), time_step, device=device, dtype=torch.long)
 
             # model_out = model(out_vae, mask_condition, time_step)
-            pred_noise = model(img, mask_condition, time_cond)
+            if mask_condition is not None:
+                pred_noise = model(img, mask_condition, time_cond)
+            else:
+                pred_noise = model(img, time_cond)
             x_start = self.predict_start_from_noise(img, time_cond, pred_noise)
             x_start = torch.clamp(x_start, min=-1., max=1.)
             pred_noise = self.predict_noise_from_start(img, time_cond, x_start)

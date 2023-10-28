@@ -34,7 +34,7 @@ def get_parser():
     parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")
     parser.add_argument('--lrd', type=float, default=0.0001, help='learning rate decay for epoch, default=0.0001')
 
-    parser.add_argument("--sample_interval", type=int, default=400, help="interval of sampling images from generators")
+    parser.add_argument("--sample_interval", type=int, default=200, help="interval of sampling images from generators")
     parser.add_argument("--checkpoint_interval", type=int, default=10, help="interval of model checkpoints")
 
     opt = parser.parse_args()

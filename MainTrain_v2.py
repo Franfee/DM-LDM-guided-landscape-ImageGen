@@ -9,7 +9,7 @@ import os
 
 
 # 指定显卡可见性
-os.environ['CUDA_VISIBLE_DEVICES'] = '1,2,3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
 
 import torch
 # 多卡
@@ -25,7 +25,7 @@ from torch.cuda.amp import GradScaler
 # 制图
 from torchvision.utils import make_grid, save_image
 
-from nets.UNet import UNet
+from nets.UNet_v2 import UNet
 from nets.VAE import VAE
 
 from utils.lr_scheduler import exp_lr_scheduler
@@ -184,7 +184,7 @@ def Stage2_Train_UNet(local_rank, args):
         pass
 
     optimizer = torch.optim.AdamW(unet1.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=0.01, eps=1e-8)
-    criterion_l1 = torch.nn.L1Loss()
+    criterion_pred = torch.nn.MSELoss()
     # GradScaler对象用于自动混合精度
     scaler = GradScaler()
 
@@ -192,7 +192,7 @@ def Stage2_Train_UNet(local_rank, args):
     vae1.cuda()
     noise_helper.cuda()
     unet1.cuda()
-    criterion_l1.cuda()
+    criterion_pred.cuda()
 
     num_gpus = torch.cuda.device_count()
     if num_gpus > 1:
@@ -217,7 +217,7 @@ def Stage2_Train_UNet(local_rank, args):
             vae_out = vae1.module.encoder(img_ref)
             vae_out = vae1.module.sample(vae_out)
             # 0.18215 = vae.config.scaling_factor
-            vae_out = vae_out * 0.18215
+            # vae_out = vae_out * 0.18215
 
             # 往vae_out隐空间中添加噪声
             noise_step = torch.randint(0, 1000, (opt.batch_size,)).long()
@@ -227,10 +227,11 @@ def Stage2_Train_UNet(local_rank, args):
             # 前向过程(model + loss)开启 autocast
             with autocast():
                 # 根据mask语义信息,把特征图中的噪声计算出来
-                noise_pred = unet1(*(x_noised, img_msk, noise_step))
+                # noise_pred = unet1(*(x_noised, noise_step))
+                noise_pred = unet1(x_noised, noise_step)
 
                 # 计算mse loss [1, 4, 64, 64],[1, 4, 64, 64]
-                pred_loss = criterion_l1(noise_pred, noise) / 4
+                pred_loss = criterion_pred(noise_pred, noise) / opt.graccbatch_size
 
             # 多卡部分 多个loss求平均
             reduce_loss = reduce_tensor(pred_loss.data)
@@ -239,14 +240,14 @@ def Stage2_Train_UNet(local_rank, args):
             # Scales loss，这是因为半精度的数值范围有限，因此需要用它放大,否则报错
             scaler.scale(pred_loss).backward()
 
-            # if (idx + 1) % 4 == 0:
-            torch.nn.utils.clip_grad_norm_(unet1.parameters(), 1.0)
-            # optimizer.step()
-            # optimizer.zero_grad()
-            scaler.step(optimizer)
-            # 查看是否要动态调整scaler的大小scaler
-            scaler.update()
-            optimizer.zero_grad()
+            if (idx + 1) % opt.graccbatch_size == 0:
+                torch.nn.utils.clip_grad_norm_(unet1.parameters(), 1.0)
+                # optimizer.step()
+                # optimizer.zero_grad()
+                scaler.step(optimizer)
+                # 查看是否要动态调整scaler的大小scaler
+                scaler.update()
+                optimizer.zero_grad()
 
             # 多卡
             if dist.get_rank() == 0:
@@ -261,11 +262,12 @@ def Stage2_Train_UNet(local_rank, args):
                     (epoch + 1, opt.s2_epochs, idx + 1, len(dataLoader), reduce_loss.item(), time_left))
 
                 # If at sample interval save image
-                if batches_done % opt.sample_interval == 0 and False:
+                if batches_done % opt.sample_interval == 0:
                     # ddim阶段 unet从完全的噪声中预测
-                    latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size(), mask_condition=img_msk)
+                    latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size())
                     # 从压缩图恢复成图片
-                    vae_seed = 1 / 0.18215 * latent_gen
+                    # vae_seed = 1 / 0.18215 * latent_gen
+                    vae_seed = latent_gen
                     # [1, 4, 64, 64] -> [1, 3, 512, 512]
                     img_gen = vae1.module.decoder(vae_seed)
                     # 保存照片
