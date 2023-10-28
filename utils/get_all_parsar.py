@@ -23,13 +23,13 @@ def get_parser():
 
     parser.add_argument("--data_root", type=str, default="./datasets/train_resized", help="datasets path")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
-    parser.add_argument("--graccbatch_size", type=int, default=1, help="gradient accumulation batch")
+    parser.add_argument("--graccbatch_size", type=int, default=4, help="gradient accumulation batch")
     
     parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_height", type=int, default=384, help="size of image height")
     parser.add_argument("--img_width", type=int, default=512, help="size of image width")
 
-    parser.add_argument("--lr", type=float, default=0.00005, help="adam: learning rate")
+    parser.add_argument("--lr", type=float, default=0.0001, help="adam: learning rate")
     parser.add_argument("--b1", type=float, default=0.9, help="adam: decay of first order momentum of gradient")
     parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")
     parser.add_argument('--lrd', type=float, default=0.0001, help='learning rate decay for epoch, default=0.0001')

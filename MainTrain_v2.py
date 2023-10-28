@@ -217,7 +217,7 @@ def Stage2_Train_UNet(local_rank, args):
             vae_out = vae1.module.encoder(img_ref)
             vae_out = vae1.module.sample(vae_out)
             # 0.18215 = vae.config.scaling_factor
-            # vae_out = vae_out * 0.18215
+            vae_out = vae_out * 0.18215
 
             # 往vae_out隐空间中添加噪声
             noise_step = torch.randint(0, 1000, (opt.batch_size,)).long()
@@ -266,8 +266,8 @@ def Stage2_Train_UNet(local_rank, args):
                     # ddim阶段 unet从完全的噪声中预测
                     latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size())
                     # 从压缩图恢复成图片
-                    # vae_seed = 1 / 0.18215 * latent_gen
-                    vae_seed = latent_gen
+                    vae_seed = 1 / 0.18215 * latent_gen
+                    # vae_seed = latent_gen
                     # [1, 4, 64, 64] -> [1, 3, 512, 512]
                     img_gen = vae1.module.decoder(vae_seed)
                     # 保存照片
