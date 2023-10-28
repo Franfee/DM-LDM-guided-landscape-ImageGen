@@ -31,7 +31,7 @@ from nets.VAE import VAE
 from utils.lr_scheduler import exp_lr_scheduler
 from utils.get_all_parsar import *
 from utils.DenoisingDiffusion import GaussianDiffusion
-
+from utils.my_gc import torch_gc
 print(opt)
 
 def init_ddp(local_rank):
@@ -272,7 +272,7 @@ def Stage2_Train_UNet(local_rank, args):
                     img_gen = vae1.module.decoder(vae_seed)
                     # 保存照片
                     unet_sample_images(img_ref=img_ref, img_msk=img_msk, img_gen=img_gen, batches_done=batches_done)
-
+                torch_gc()
                 prev_time = time.time()
                 # end one batch
         # end one epoch checkpoint
