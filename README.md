@@ -64,7 +64,7 @@
 - step48000:<img src="Attachment/vae-step_48000.png">
 - step50000:<img src="Attachment/vae-step_50000.png">
 
-#### 21-50 epoch
+#### 21-100 epoch
 - batch size = 3
 - loss fun: L1loss
 - gradient accumulation batch = 1
