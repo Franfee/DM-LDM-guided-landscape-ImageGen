@@ -78,8 +78,21 @@ Testing commands: <code>python3 MainTest.py</code>
 - step163200:<img src="Attachment/vae-step_163200.png">
 
 ### Unet
-- TODO
+oh bad
+#### -200 epoch
+- batch size = 1
+- loss fun: L1loss
+- gradient accumulation batch = 4
+- optimizer = AdamW(train_lr = 1e-4, adam_betas = (0.9, 0.999), weight_decay=0.01, eps=1e-8)
+- lr_scheduler = exp
+- rtx3090 * 4
 
+- step542000:<img src="Attachment/unet-step_542000.png">
+- step970000:<img src="Attachment/unet-step_970000.png">
+- step977000:<img src="Attachment/unet-step_977000.png">
+- step992500:<img src="Attachment/unet-step_992500.png">
+- step998000:<img src="Attachment/unet-step_998000.png">
+- step999000:<img src="Attachment/unet-step_999000.png">
 
 ## TODO
 1. Adding modules for learning rate adjustment
