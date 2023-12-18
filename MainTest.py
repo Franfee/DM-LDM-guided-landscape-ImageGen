@@ -1,52 +1,36 @@
-# -*- coding: utf-8 -*-
-# @Time    : 2023/6/22 11:02
-# @Author  : FanAnfei
-# @Software: PyCharm
-# @python  : Python 3.9.12
+import os
+# 指定显卡可见性
+os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 
-
-from torchvision.utils import make_grid, save_image
-
-from utils.DenoisingDiffusion import GaussianDiffusion
-from utils.MyDataLoader import *
-from nets.UNet import UNet
+import torch
+from nets.UNet_v2 import UNet
 from nets.VAE import VAE
+from utils.DenoisingDiffusion import GaussianDiffusion
+from MainTrain_s2 import unet_sample_images
 
 
-DEVICE = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
-print(DEVICE)
+vae1 = VAE()
+unet1 = UNet()
 
+noise_helper = GaussianDiffusion()
+noise_helper = noise_helper.cuda()
+noise_helper.eval()
 
-def Test():
-    test_loader = get_test_dataloader()
-    noise_helper = GaussianDiffusion()
-    noise_helper.eval()
+vae1.load_state_dict(torch.load(os.path.join("result", "models", "vae.ckpt"), map_location='cpu'))
+unet1.load_state_dict(torch.load(os.path.join("result", "models", "unet-200.ckpt"), map_location='cpu'), strict=False)
 
-    vae_clone = VAE()
-    UNet_clone = UNet()
-    vae_clone.cuda()
-    UNet_clone.cuda()
-    vae_clone.load_state_dict(torch.load(os.path.join("result", "models", "vae.pth"), map_location=DEVICE))
-    UNet_clone.load_state_dict(torch.load(os.path.join("result", "models", "unet.pth"), map_location=DEVICE))
-    vae_clone.eval()
-    UNet_clone.eval()
-    for idx, data in enumerate(test_loader):
-        img_ref, img_msk, save_name = data['img_ref'], data['img_msk'], data['save_name']
-        img_ref = img_ref.cuda()
-        img_msk = img_msk.cuda()
+vae1 = vae1.cuda()
+vae1.eval()
+unet1 = unet1.cuda()
+unet1.eval()
 
-        # 风格ref图像, vae_latent_space特征图
-        vae_out = vae_clone.encoder(img_ref)
-        vae_out = vae_clone.sample(vae_out)
+for batch in range(5):
+    # ddim阶段 unet从完全的噪声中预测
+    latent_gen = noise_helper.ddim_sample(model=unet1, shape=(1,4,48,64))
+    
+    # 从压缩图恢复成图片
+    vae_seed = 1 / 0.18215 * latent_gen
 
-        latent_gen = noise_helper.ddim_sample(model=UNet_clone, shape=vae_out.size(), mask_condition=img_msk)
-        img_gen = vae_clone.decoder(latent_gen)
-        img_gen = make_grid(img_gen, nrow=1, normalize=True)
-        save_name = os.path.join("result", "images", save_name[0])
-        save_image(img_gen, save_name, normalize=False)
-
-
-if __name__ == '__main__':
-    Test()
-
-
+    # [1, 4, 48, 64] -> [1, 3, 384, 512]
+    img_gen = vae1.decoder(vae_seed)
+    unet_sample_images(img_ref=torch.randn(size=(1,3,384,512), device='cuda'), img_msk=torch.randn(size=(1,1,384,512), device='cuda'), img_gen=img_gen, batches_done=batch)
