@@ -9,7 +9,7 @@ import os
 
 
 # 指定显卡可见性
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '2,3'
 
 import torch
 # 多卡
@@ -32,6 +32,7 @@ from utils.lr_scheduler import exp_lr_scheduler
 from utils.get_all_parsar import *
 from utils.DenoisingDiffusion import GaussianDiffusion
 from utils.my_gc import torch_gc
+
 
 def init_ddp(local_rank):
     """
@@ -63,19 +64,29 @@ def reduce_tensor(tensor):
     return rt
 
 
-def unet_sample_images(img_ref, img_msk, img_gen, batches_done, dir_output="images"):
-    """Saves a generated sample"""
-    b = img_ref.size()[0]
-    img_msk = torch.cat((img_msk * 3, img_msk * 3, img_msk * 3), dim=1)
+# def unet_sample_images(img_ref, img_msk, img_gen, batches_done, dir_output="images"):
+#     """Saves a generated sample"""
+#     b = img_ref.size()[0]
+#     img_msk = torch.cat((img_msk * 3, img_msk * 3, img_msk * 3), dim=1)
 
+#     # Arrange images along x-axis
+#     img_ref = make_grid(img_ref, nrow=b, normalize=True)
+#     img_msk = make_grid(img_msk, nrow=b, normalize=True)
+#     img_gen = make_grid(img_gen, nrow=b, normalize=True)
+
+#     # Arrange images along y-axis
+#     image_grid = torch.cat((img_ref, img_msk, img_gen), 1)
+#     save_image(image_grid, os.path.join("result", dir_output, "unet-step_%d.png" % batches_done), normalize=False)
+
+
+def unet_sample_images(img_gen, batches_done, dir_output="images"):
+    """Saves a generated sample"""
+    b = img_gen.size()[0]
+    
     # Arrange images along x-axis
-    img_ref = make_grid(img_ref, nrow=b, normalize=True)
-    img_msk = make_grid(img_msk, nrow=b, normalize=True)
     img_gen = make_grid(img_gen, nrow=b, normalize=True)
 
-    # Arrange images along y-axis
-    image_grid = torch.cat((img_ref, img_msk, img_gen), 1)
-    save_image(image_grid, os.path.join("result", dir_output, "unet-step_%d.png" % batches_done), normalize=False)
+    save_image(img_gen, os.path.join("result", dir_output, "unet-step_%d.png" % batches_done), normalize=False)
 
 
 def Stage2_Train_UNet(local_rank, args):
@@ -139,7 +150,7 @@ def Stage2_Train_UNet(local_rank, args):
             vae_out = vae1.module.sample(vae_out)
             
             # 0.18215 = vae.config.scaling_factor
-            # vae_out = vae_out * 0.18215
+            vae_out = vae_out * 0.18215
 
             # 往vae_out隐空间中添加噪声
             noise_step = torch.randint(0, 1000, (opt.batch_size,)).long()
@@ -188,12 +199,11 @@ def Stage2_Train_UNet(local_rank, args):
                     # ddim阶段 unet从完全的噪声中预测
                     latent_gen = noise_helper.ddim_sample(model=unet1, shape=vae_out.size())
                     # 从压缩图恢复成图片
-                    # vae_seed = 1 / 0.18215 * latent_gen
-                    vae_seed = latent_gen
+                    vae_seed = 1 / 0.18215 * latent_gen
                     # [1, 4, 48, 64] -> [1, 3, 384, 512]
                     img_gen = vae1.module.decoder(vae_seed)
                     # 保存照片
-                    unet_sample_images(img_ref=img_ref, img_msk=img_msk, img_gen=img_gen, batches_done=batches_done)
+                    unet_sample_images(img_gen=img_gen, batches_done=batches_done)
                 torch_gc()
                 prev_time = time.time()
                 # end one batch
