@@ -77,7 +77,7 @@ Testing commands: <code>python3 MainTest.py</code>
 - step160000:<img src="Attachment/vae-step_160000.png">
 - step163200:<img src="Attachment/vae-step_163200.png">
 
-### Unet
+### uncondtional Unet
 oh bad
 #### -200 epoch
 - batch size = 1
@@ -87,12 +87,17 @@ oh bad
 - lr_scheduler = exp
 - rtx3090 * 4
 
-- step542000:<img src="Attachment/unet-step_542000.png">
-- step970000:<img src="Attachment/unet-step_970000.png">
-- step977000:<img src="Attachment/unet-step_977000.png">
-- step992500:<img src="Attachment/unet-step_992500.png">
-- step998000:<img src="Attachment/unet-step_998000.png">
-- step999000:<img src="Attachment/unet-step_999000.png">
+- step3200:<img src="Attachment/unet-step_3200.png">
+- step3300:<img src="Attachment/unet-step_3300.png">
+- step23100:<img src="Attachment/unet-step_23100.png">
+- step23200:<img src="Attachment/unet-step_23200.png">
+- step37800:<img src="Attachment/unet-step_37800.png">
+- step37900:<img src="Attachment/unet-step_37900.png">
+- step43800:<img src="Attachment/unet-step_43800.png">
+- step43900:<img src="Attachment/unet-step_43900.png">
+- step115600:<img src="Attachment/unet-step_115600.png">
+- step115700:<img src="Attachment/unet-step_115700.png">
+- step115800:<img src="Attachment/unet-step_115800.png">
 
 ## TODO
 1. Adding modules for learning rate adjustment
