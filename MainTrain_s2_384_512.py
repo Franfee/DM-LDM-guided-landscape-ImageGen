@@ -121,15 +121,18 @@ def Stage2_Train_UNet(local_rank, args):
 
     # --------GPU-----------
     vae1.cuda()
+    vae1.requires_grad_(False)
+    vae1.eval()
+
     noise_helper.cuda()
     unet1.cuda()
     criterion_pred.cuda()
 
     num_gpus = torch.cuda.device_count()
     if num_gpus > 1:
-        vae1 = SyncBatchNorm.convert_sync_batchnorm(vae1)  # BN层同步
-        vae1 = DDP(vae1, device_ids=[local_rank], output_device=local_rank) # 多卡通信
-        vae1.eval()
+        # vae1 = SyncBatchNorm.convert_sync_batchnorm(vae1)  # BN层同步
+        # vae1 = DDP(vae1, device_ids=[local_rank], output_device=local_rank) # 多卡通信
+        # vae1.eval()
         
         unet1 = SyncBatchNorm.convert_sync_batchnorm(unet1)  # BN层同步
         unet1 = DDP(unet1, device_ids=[local_rank], output_device=local_rank) # 多卡通信
@@ -146,8 +149,8 @@ def Stage2_Train_UNet(local_rank, args):
             img_msk = img_msk.cuda()
 
             # 风格ref图像, vae_latent_space特征图
-            vae_out = vae1.module.encoder(img_ref)
-            vae_out = vae1.module.sample(vae_out)
+            vae_out = vae1.encoder(img_ref)
+            vae_out = vae1.sample(vae_out)
             
             # 0.18215 = vae.config.scaling_factor
             vae_out = vae_out * 0.18215
@@ -201,7 +204,7 @@ def Stage2_Train_UNet(local_rank, args):
                     # 从压缩图恢复成图片
                     vae_seed = 1 / 0.18215 * latent_gen
                     # [1, 4, 48, 64] -> [1, 3, 384, 512]
-                    img_gen = vae1.module.decoder(vae_seed)
+                    img_gen = vae1.decoder(vae_seed)
                     # 保存照片
                     unet_sample_images(img_gen=img_gen, batches_done=batches_done)
                 torch_gc()
