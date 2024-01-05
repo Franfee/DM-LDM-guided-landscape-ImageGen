@@ -1,5 +1,11 @@
 # guided--landscape-imageGen-diffusion
 *使用 [中文](README.md) 阅读*
+
+## Attention
+The project will no longer be updated. The reasons are: 
+- Reason 1: There are certain issues with the unet architecture I am using, resulting in poor performance for the unconditional generation task.
+- Reason 2: I am currently working on another similar image synthesis task, and the follow-up of this similar task will be opened source.
+
 ## Introduction
 
 image generation tasks have been very application scenario computer vision tasks, and there are still many challenges in generating meaningful, high-quality images from semantic segmentation graphs, such as ensuring the authenticity, clarity, diversity, and aesthetics of the generated images. Among them, conditional image synthesis, i.e., inputting image data and synthesizing realistic images, is widely used in the field of content generation and image editing. One way of conditional image synthesis is to use two images as input, which are processed and transformed to generate a new image, where one input is a semantic segmentation image (called mask graph) indicating the semantic information of the generated image (called gen graph), and the other input is a reference style image (called ref graph) indicating the style information of the gen graph in terms of hue and other aspects
