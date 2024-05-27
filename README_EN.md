@@ -2,9 +2,15 @@
 *使用 [中文](README.md) 阅读*
 
 ## Attention
+### Q
 The project will no longer be updated. The reasons are: 
-- Reason 1: There are certain issues with the unet architecture I am using, resulting in poor performance for the unconditional generation task.
-- Reason 2: I am currently working on another similar image synthesis task, and the follow-up of this similar task will be opened source.
+- Question 1: Issues have arisen in the model design.
+- Question 2: Issues have occurred during model training.
+- Question 3: Another similar image synthesis task is currently in progress, and the subsequent results of this similar task will be open-sourced.
+### A
+- A Q1: Redesign the model (align key-value dimensions, align masks).
+- A Q2: Add mean-variance constraints to stage 1 training, and use a larger batch size (128) for averaging in stage 2.
+- A Q3: Completed, awaiting open-source release.
 
 ## Introduction
 
